@@ -91,7 +91,7 @@
 
       <!-- Breadcrumb / Back -->
       <div style="margin-bottom:16px">
-        <a href="customer_list.html" style="font-size:13px;color:var(--text-secondary);display:inline-flex;align-items:center;gap:6px">
+        <a onclick="location.href='{% url 'customers' %}'" style="font-size:13px;color:var(--text-secondary);display:inline-flex;align-items:center;gap:6px">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
           Back to Customers
         </a>
@@ -182,7 +182,7 @@
             </div>
             <div class="card-body">
               <div class="map-frame">
-                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox={{ map_min_lon }},{{ map_min_lat }},{{ map_max_lon }},{{ map_max_lat }}&layer=mapnik&marker={{ customer.latitude }},{{ customer.longitude }}"></iframe>
+                <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-115.13%2C36.26%2C-115.10%2C36.28&layer=mapnik&marker=36.27%2C-115.12"></iframe>
                 <div class="map-badge">
                   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                   {{ customer.full_address }}
@@ -236,7 +236,7 @@
                   {% for job in jobs %}
                   <tr>
                       <td>
-                          <a href="" class="td-link">
+                          <a href="{% url 'job_details' job.id %}" class="td-link">
                               #{{ job.id }}
                           </a>
                       </td>
@@ -246,7 +246,7 @@
                       <td>{{ job.appliance }}</td>
 
                       <td class="td-muted">
-                          {{ job.scheduled_date|date:"m/d/y H:i" }}
+                          {{ job.scheduled_date|date:"m/d/y - h:i A" }}
                       </td>
 
                       <td>
@@ -256,9 +256,7 @@
                       </td>
 
                       <td>
-                          <button
-                              class="btn btn-ghost btn-sm btn-icon"
-                              onclick="location.href=''">
+                          <button class="btn btn-ghost btn-sm btn-icon" onclick="location.href='{% url 'job_details' job.id %}'">
 
                               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                   <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>

@@ -243,6 +243,7 @@ class Job(models.Model):
     needs_authorization = models.BooleanField(default=False, null=True, blank=True)
     date_authorized = models.DateTimeField(blank=True, null=True)
     needs_invoice = models.BooleanField(default=False, null=True, blank=True)
+    repair_job = models.BooleanField(default=False, null=True, blank=True)
     invoice_paid = models.BooleanField(default=False, null=True, blank=True)
     management_approved = models.BooleanField(default=False, null=True, blank=True)
 
@@ -264,11 +265,6 @@ class Job(models.Model):
             self.cost_4 or Decimal("0"),
             self.cost_5 or Decimal("0"),
         ]))
-
-    def get_absolute_url(self):
-        if "REPAIR" in self.title:
-            return reverse("repair_job_info", args=[self.id])
-        return reverse("job_info", args=[self.id])
 
     def __str__(self):
         return f"{self.title} - {self.customer.full_name}"

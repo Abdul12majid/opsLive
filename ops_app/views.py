@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse, get_object_or_404
-from .models import Customer
+from .models import Customer, Job
 
 # Create your views here.
 
@@ -26,4 +26,13 @@ def customer_details(request, pk):
 	    "map_max_lat": customer.latitude + 0.01,
     }
     return render(request, "customer/customer_details.html", context)
+
+
+def job_details(request, pk):
+    job = get_object_or_404(Job, pk=pk)
+
+    context={
+    	"job": job,
+    }
+    return render(request, "job/job_info.html", context)
 	
