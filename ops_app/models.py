@@ -1,4 +1,5 @@
 from django.db import models
+import re
 
 # Create your models here.
 
@@ -212,7 +213,7 @@ class Job(models.Model):
     date_3 = models.DateTimeField(blank=True, null=True)
     date_4 = models.DateTimeField(blank=True, null=True)
     date_5 = models.DateTimeField(blank=True, null=True)
-    
+
     job_note = models.TextField(blank=True, null=True)
     problem = models.TextField(blank=True, null=True)
     field_note = models.TextField(blank=True, null=True)
