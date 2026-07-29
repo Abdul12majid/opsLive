@@ -1,3 +1,4 @@
 config_env/
+webhook_triggers/
 seed_customers.py
 seed_jobs.py
