@@ -88,7 +88,57 @@
                 <th></th>
               </tr>
             </thead>
-            <tbody id="customers-tbody"></tbody>
+            <tbody id="customers-tbody">
+                {% for c in customers %}
+                <tr>
+                    <td class="td-muted">#{{ c.id }}</td>
+
+                    <td>
+                        <a href="" class="td-link">
+                            {{ c.full_name }}
+                        </a>
+                    </td>
+
+                    <td>{{ c.formatted_phone }}</td>
+
+                    <td class="td-muted">
+                        {{ c.email|default:"-" }}
+                    </td>
+
+                    <td class="td-muted">
+                        {{ c.date_added|date:"m/d/y H:i" }}
+                    </td>
+
+                    <td>{{ c.jobs.count }}</td>
+
+                    <td>
+                        {% if c.is_unpaid %}
+                            <span class="badge badge-unpaid">UNPAID</span>
+                        {% else %}
+                            <span class="badge badge-active">ACTIVE</span>
+                        {% endif %}
+                    </td>
+
+                    <td style="text-align:right">
+                        <button
+                            class="btn btn-ghost btn-sm btn-icon"
+                            onclick="location.href=">
+
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="8" style="text-align:center;padding:30px;">
+                        No customers found.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
           </table>
         </div>
         <div class="pagination">
@@ -148,59 +198,25 @@
 
 <script src="{% static 'js/app.js' %}"></script>
 <script>
-  document.getElementById('sidebar-mount').innerHTML = buildSidebar('customer_list.html');
-  document.getElementById('topbar-mount').innerHTML  = buildTopbar('Customers', '/ 3,868 total');
+  document.getElementById('sidebar-mount').innerHTML =
+    buildSidebar('customer_list.html');
 
-  let currentFilter = 'all';
+  document.getElementById('topbar-mount').innerHTML =
+    buildTopbar('Customers', '/ {{ customer_count }} total');
 
-  function renderCustomers() {
-    const q = document.getElementById('search-input').value.toLowerCase().trim();
-    let list = CUSTOMERS.filter(c => {
-      if (q && !(`${c.name} ${c.phone} ${c.email} ${c.id}`.toLowerCase().includes(q))) return false;
-      if (currentFilter === 'ahs' && c.id % 3 !== 0) return false;
-      if (currentFilter === 'unpaid' && c.id % 5 !== 0) return false;
-      if (currentFilter === 'recent' && c.id < 3855) return false;
-      return true;
-    });
-
-    const tbody = document.getElementById('customers-tbody');
-    tbody.innerHTML = list.map(c => `
-      <tr>
-        <td class="td-muted">#${c.id}</td>
-        <td><a href="customer_details.html?id=${c.id}" class="td-link">${c.name}</a></td>
-        <td>${c.phone}</td>
-        <td class="td-muted">${c.email}</td>
-        <td class="td-muted">${c.date}</td>
-        <td>${Math.floor(Math.random()*5)+1}</td>
-        <td>${c.id % 4 === 0 ? '<span class="badge badge-unpaid">UNPAID</span>' : '<span class="badge badge-active">ACTIVE</span>'}</td>
-        <td style="text-align:right">
-          <button class="btn btn-ghost btn-sm btn-icon" title="View" onclick="location.href='customer_details.html?id=${c.id}'">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </td>
-      </tr>`).join('');
-
-    document.getElementById('result-count').textContent = `${list.length} results`;
-    document.getElementById('page-end').textContent = list.length;
+  function openNewCustomerModal() {
+    document.getElementById('new-customer-modal').classList.add('open');
   }
 
-  function filterCustomers() { renderCustomers(); }
-
-  function setFilter(f) {
-    currentFilter = f;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    event.target.classList.add('active');
-    renderCustomers();
+  function closeModal(id) {
+    document.getElementById(id).classList.remove('open');
   }
 
-  function openNewCustomerModal() { document.getElementById('new-customer-modal').classList.add('open'); }
-  function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-  document.getElementById('new-customer-modal').addEventListener('click', e => {
-    if (e.target.id === 'new-customer-modal') closeModal('new-customer-modal');
+  document.getElementById('new-customer-modal').addEventListener('click', function (e) {
+    if (e.target.id === 'new-customer-modal') {
+      closeModal('new-customer-modal');
+    }
   });
-
-  renderCustomers();
 </script>
 </body>
 </html>

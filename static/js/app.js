@@ -1,28 +1,5 @@
 // ── Mock Data ─────────────────────────────────────────────────────────────────
 
-const CUSTOMERS = [
-  { id:3868, name:'Melissa Powell',        phone:'(702) 806-6431', email:'mzpowell26@hotmail.com',       date:'07/22/26 07:40', address:'7015 Crimson Shadow St' },
-  { id:3867, name:'Marla Walls',           phone:'(760) 900-5384', email:'rcwalls1@hotmail.com',         date:'07/22/26 07:38', address:'1957 Williamsport' },
-  { id:3866, name:'Dav Sem',               phone:'(702) 338-3184', email:'golphnutt@aol.com',            date:'07/22/26 06:35', address:'754 Dellenbaugh Ct' },
-  { id:3865, name:'Marley Tenant',         phone:'(702) 581-4238', email:'office@thehomeshopnv.com',     date:'07/21/26 16:40', address:'2132 Willowbury Dr' },
-  { id:3864, name:'Kristen Leon',          phone:'(480) 298-1711', email:'chefkristen@yahoo.com',        date:'07/21/26 16:30', address:'6424 Silverfield Dr' },
-  { id:3863, name:'Michael Klein',         phone:'(818) 989-1189', email:'Mike@kleinmedia.com',          date:'07/21/26 13:46', address:'2750 Sandalwood' },
-  { id:3862, name:'David Lewis',           phone:'(702) 370-1924', email:'dave67gto@hotmail.com',        date:'07/21/26 10:52', address:'1224 Cheyenne Ct' },
-  { id:3861, name:'Abelardo Martinez',     phone:'(702) 266-4226', email:'lalos1cafe@yahoo.com',         date:'07/21/26 09:45', address:'2240 Montessouri St' },
-  { id:3860, name:'Jesus Bacallao',        phone:'(725) 256-2794', email:'opmlv702@gmail.com',           date:'07/21/26 08:54', address:'5614 Crowbush Cove Pl' },
-  { id:3859, name:'Kevin Ruth',            phone:'(702) 271-0025', email:'karuth177@gmail.com',          date:'07/21/26 08:50', address:'351 E Kimberly Dr' },
-  { id:3858, name:'Ivanohe Santoyo',       phone:'(702) 970-1289', email:'isantoyo123@gmail.com',        date:'07/20/26 18:40', address:'4845 Bride St' },
-  { id:3857, name:'Ann Boado',             phone:'(414) 617-1878', email:'arctico1@aol.com',             date:'07/20/26 13:45', address:'6491 Bright Nimbus Ave' },
-  { id:3856, name:'Homero Bhatnagar',      phone:'(702) 934-3231', email:'None',                         date:'07/20/26 11:11', address:'2476 Dragon Fire' },
-  { id:3855, name:'Vincent Kathleen Mccann',phone:'(562) 477-8801',email:'vkmccann@verizon.net',         date:'07/20/26 10:45', address:'3041 Monroe Park Rd' },
-  { id:3854, name:'Stephanie Tenants',     phone:'(517) 376-1343', email:'orpha_capistrano@yahoo.com',   date:'07/20/26 10:40', address:'9061 Buffalo Park Ave' },
-  { id:3853, name:'Teresa Castellon',      phone:'(702) 513-4992', email:'dvshei@aol.com',               date:'07/20/26 09:38', address:'4318 Cicada Way' },
-  { id:3852, name:'Arturo Garate',         phone:'(702) 417-3841', email:'agarate75@gmail.com',          date:'07/20/26 09:30', address:'6104 Sonoma Cir' },
-  { id:3851, name:'Caryn Citron',          phone:'(702) 581-8221', email:'caryn300@aol.com',             date:'07/20/26 09:25', address:'737 Pinnacle Heights Ln' },
-  { id:3850, name:'Angelica Delgado',      phone:'(702) 344-4279', email:'allinone94@hotmail.com',       date:'07/20/26 08:40', address:'7660 W Eldorado Ln Unit210' },
-  { id:3849, name:'Mary Hervieux',         phone:'(702) 752-0553', email:'gilles.hervieux@yahoo.com',    date:'07/20/26 07:44', address:'1828 Indian Bend' },
-];
-
 const JOBS = [
   {
     id: 2367,
