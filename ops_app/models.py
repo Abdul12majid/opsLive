@@ -137,7 +137,6 @@ class Job(models.Model):
     description = models.TextField(blank=True, null=True)
     job_history = models.TextField(blank=True, null=True)
     job_id = models.CharField(max_length=50, blank=True, null=True)
-    job_tags = models.ManyToManyField(Tag, blank=True, related_name='job_tags')
     smartautho = models.BooleanField(blank=True, null=True, default=False)
     rating = models.IntegerField(
         choices=[
@@ -214,11 +213,6 @@ class Job(models.Model):
     date_4 = models.DateTimeField(blank=True, null=True)
     date_5 = models.DateTimeField(blank=True, null=True)
     
-    current_step = models.ForeignKey(
-        Job_Level,
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True) 
     job_note = models.TextField(blank=True, null=True)
     problem = models.TextField(blank=True, null=True)
     field_note = models.TextField(blank=True, null=True)
