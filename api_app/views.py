@@ -4,6 +4,7 @@ from .serializers import CustomerSerializer, JobSerializer
 from ops_app.models import Customer, Job, Team_Member
 from rest_framework import status
 from django.utils import timezone
+from rest_framework.response import Response
 
 # Create your views here.
 def index(request):
@@ -188,13 +189,6 @@ def create_job(request):
             "customer": customer,
             "assigned_to": assigned_worker
         }
-
-        if tech_pickup_override:
-            la_now = timezone.now().astimezone(ZoneInfo("America/Los_Angeles"))
-            extra_fields.update({
-                "scheduled_date": la_now,
-                "is_completed": True
-            })
 
         job = serializer.save(**extra_fields)
 

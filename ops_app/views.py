@@ -20,10 +20,6 @@ def customer_details(request, pk):
     context={
     	"customer": customer,
         "jobs": customer.jobs.all().order_by("-id"),
-	    "map_min_lon": customer.longitude - 0.01,
-	    "map_min_lat": customer.latitude - 0.01,
-	    "map_max_lon": customer.longitude + 0.01,
-	    "map_max_lat": customer.latitude + 0.01,
     }
     return render(request, "customer/customer_details.html", context)
 
