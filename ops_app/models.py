@@ -1,5 +1,7 @@
 from django.db import models
 import re
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 
@@ -82,6 +84,21 @@ class Customer(models.Model):
     def __str__(self):
         return self.full_name 
 
+class Customer_Comment(models.Model):
+    owner = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name='customer_comments'
+    )
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+    the_comment = models.TextField(blank=True, null=True)
+    uploaded_at = models.DateTimeField(default=timezone.now)
+
 class Team_Member(models.Model):
     full_name = models.CharField(max_length=300, blank=True, null=True)
     user_id = models.CharField(max_length=300, blank=True, null=True)
@@ -115,8 +132,6 @@ def job_attachment_report_path(instance, filename):
     filename = f"{timestamp}_{customer_name}_{appliance}.pdf"
 
     return f"{report_folder}/{filename}"
-
-
 class Job(models.Model):
     STATUS_CHOICES = [
         ('New', 'New'),
