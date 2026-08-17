@@ -1,16 +1,671 @@
-<div id="tab-notes" style="display:none">
+<div
+    id="tab-notes"
+    data-customer-id="{{ customer.id }}"
+    data-comments-url="{% url 'customer_comments' customer.id %}"
+    data-add-comment-url="{% url 'add_customer_comment' customer.id %}"
+    data-delete-comment-url="{% url 'delete_customer_comment' customer.id %}"
+    style="display:none"
+>
   <div class="card">
+
     <div class="card-header">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="var(--amber)" stroke-width="2">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+      </svg>
+
       <span class="card-title">Customer Notes</span>
     </div>
+
     <div class="card-body">
-      <textarea class="form-control" placeholder="Add a note about this customer..." style="min-height:120px"></textarea>
+
+      <textarea
+        id="customerCommentInput"
+        class="form-control"
+        placeholder="Add a note about this customer..."
+        style="min-height:120px"
+      ></textarea>
+
       <div style="margin-top:12px;display:flex;justify-content:flex-end">
-        <button class="btn btn-primary btn-sm" onclick="showToast('Note saved','success')">Save Note</button>
+        <button
+          type="button"
+          id="saveCustomerCommentBtn"
+          class="btn btn-primary btn-sm"
+          onclick="saveCustomerComment()"
+        >
+          Save Note
+        </button>
       </div>
+
       <div class="divider"></div>
-      <p style="font-size:13px;color:var(--text-muted)">No notes yet.</p>
+
+      <div id="customerCommentsContainer">
+
+        <p
+          id="noCustomerComments"
+          style="font-size:13px;color:var(--text-muted)"
+        >
+          No notes yet.
+        </p>
+
+      </div>
+
     </div>
   </div>
 </div>
+
+<script>
+
+function getCookie(name) {
+    let cookieValue = null;
+
+    if (document.cookie && document.cookie !== '') {
+
+        const cookies = document.cookie.split(';');
+
+        for (let cookie of cookies) {
+
+            cookie = cookie.trim();
+
+            if (cookie.startsWith(name + '=')) { 
+
+                cookieValue = decodeURIComponent(
+                    cookie.substring(name.length + 1)
+                );
+
+                break;
+            }
+        }
+    }
+
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+
+//GET NOTES TAB DATA
+function getNotesTab() {
+
+    return document.getElementById('tab-notes');
+
+}
+
+//LOAD CUSTOMER COMMENTS
+function loadCustomerComments() {
+
+    const notesTab = getNotesTab();
+
+    if (!notesTab) {
+        return;
+    }
+
+
+    const commentsUrl =
+        notesTab.dataset.commentsUrl;
+
+
+    if (!commentsUrl) {
+
+        console.error(
+            'Customer comments URL not found.'
+        );
+
+        return;
+    }
+
+
+    fetch(commentsUrl, {
+
+        method: 'GET',
+
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error(
+                'Failed to load customer comments.'
+            );
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        if (!data.success) {
+
+            showToast(
+                data.message || 'Unable to load notes',
+                'error'
+            );
+
+            return;
+        }
+
+
+        renderCustomerComments(
+            data.comments
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            'Error loading customer comments:',
+            error
+        );
+
+        showToast(
+            'Unable to load customer notes',
+            'error'
+        );
+
+    });
+
+}
+
+
+//RENDER CUSTOMER COMMENTS
+function renderCustomerComments(comments) {
+
+    const container =
+        document.getElementById(
+            'customerCommentsContainer'
+        );
+
+
+    if (!container) {
+        return;
+    }
+
+
+    container.innerHTML = '';
+
+
+    if (!comments || comments.length === 0) {
+
+        container.innerHTML = `
+            <p
+                id="noCustomerComments"
+                style="font-size:13px;color:var(--text-muted)"
+            >
+                No notes yet.
+            </p>
+        `;
+
+        return;
+    }
+
+
+    comments.forEach(comment => {
+
+        container.insertAdjacentHTML(
+            'beforeend',
+            createCustomerCommentHTML(comment)
+        );
+
+    });
+
+}
+
+
+//CREATE COMMENT HTML
+function createCustomerCommentHTML(comment) {
+
+    return `
+        <div
+            class="customer-comment"
+            id="customer-comment-${comment.id}"
+            style="
+                padding:14px 0;
+                border-bottom:1px solid var(--border);
+            "
+        >
+
+            <div
+                style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:space-between;
+                    margin-bottom:8px;
+                "
+            >
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:center;
+                        gap:9px;
+                    "
+                >
+
+                    <!-- User Initials -->
+                    <div
+                        style="
+                            width:32px;
+                            height:32px;
+                            border-radius:50%;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            background:var(--amber);
+                            color:#fff;
+                            font-size:11px;
+                            font-weight:700;
+                            flex-shrink:0;
+                            text-transform:uppercase;
+                        "
+                    >
+                        ${escapeHtml(comment.initials)}
+                    </div>
+
+
+                    <!-- User Name -->
+                    <div>
+
+                        <div
+                            style="
+                                font-size:13px;
+                                font-weight:600;
+                                color:var(--text);
+                            "
+                        >
+                            ${escapeHtml(comment.created_by)}
+                        </div>
+
+                        <div
+                            style="
+                                font-size:11px;
+                                color:var(--text-muted);
+                                margin-top:2px;
+                            "
+                        >
+                            ${escapeHtml(comment.uploaded_at)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Delete -->
+                <button
+                    type="button"
+                    class="btn btn-sm"
+                    style="
+                        color:var(--text-muted);
+                        font-size:12px;
+                        padding:2px 6px;
+                    "
+                    onclick="deleteCustomerComment(${comment.id})"
+                >
+                    Delete
+                </button>
+
+            </div>
+
+
+            <!-- Comment -->
+            <div
+                style="
+                    font-size:14px;
+                    line-height:1.5;
+                    color:var(--text);
+                    white-space:pre-wrap;
+                    padding-left:41px;
+                "
+            >
+                ${escapeHtml(comment.comment)}
+            </div>
+
+        </div>
+    `;
+}
+
+
+//SAVE CUSTOMER COMMENT
+function saveCustomerComment() {
+
+    const notesTab = getNotesTab();
+
+    if (!notesTab) {
+        return;
+    }
+
+
+    const addCommentUrl =
+        notesTab.dataset.addCommentUrl;
+
+
+    const input =
+        document.getElementById(
+            'customerCommentInput'
+        );
+
+
+    const button =
+        document.getElementById(
+            'saveCustomerCommentBtn'
+        );
+
+
+    if (!addCommentUrl || !input || !button) {
+        return;
+    }
+
+
+    const comment =
+        input.value.trim();
+
+
+    
+    //Don't save empty comments
+    
+
+    if (!comment) {
+
+        showToast(
+            'Please enter a note',
+            'error'
+        );
+
+        input.focus();
+
+        return;
+    }
+
+
+    
+    //Disable button while saving
+    
+
+    button.disabled = true;
+
+    const originalButtonText =
+        button.innerHTML;
+
+    button.innerHTML = 'Saving...';
+
+
+    const formData =
+        new FormData();
+
+    formData.append(
+        'the_comment',
+        comment
+    );
+
+
+    
+    //SAVE
+    
+
+    fetch(addCommentUrl, {
+
+        method: 'POST',
+
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+
+        body: formData
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error(
+                'Failed to save comment.'
+            );
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        if (!data.success) {
+
+            showToast(
+                data.message || 'Unable to save note',
+                'error'
+            );
+
+            return;
+        }
+
+
+        
+        //Remove "No notes yet."
+        const noComments =
+            document.getElementById(
+                'noCustomerComments'
+            );
+
+
+        if (noComments) {
+            noComments.remove();
+        }
+
+
+        
+        //Add new comment immediately
+        const container =
+            document.getElementById(
+                'customerCommentsContainer'
+            );
+
+
+        container.insertAdjacentHTML(
+            'afterbegin',
+            createCustomerCommentHTML(
+                data.comment
+            )
+        );
+
+
+        
+        //Clear textarea
+        input.value = '';
+
+        //Success toast
+        showToast(
+            data.message || 'Note saved',
+            'success'
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            'Error saving customer comment:',
+            error
+        );
+
+        showToast(
+            'Unable to save note',
+            'error'
+        );
+
+    })
+
+    .finally(() => {
+
+        button.disabled = false;
+
+        button.innerHTML =
+            originalButtonText;
+
+    });
+
+}
+
+//DELETE CUSTOMER COMMENT
+function deleteCustomerComment(commentId) {
+
+    const notesTab = getNotesTab();
+
+    if (!notesTab) {
+        return;
+    }
+
+
+    const deleteCommentUrl =
+        notesTab.dataset.deleteCommentUrl;
+
+
+    if (!deleteCommentUrl) {
+        return;
+    }
+
+
+    fetch(deleteCommentUrl, {
+
+        method: 'POST',
+
+        headers: {
+            'X-CSRFToken': csrftoken,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type':
+                'application/x-www-form-urlencoded'
+        },
+
+        body: new URLSearchParams({
+            comment_id: commentId
+        })
+
+    })
+
+    .then(response => {
+
+        if (!response.ok) {
+            throw new Error(
+                'Failed to delete comment.'
+            );
+        }
+
+        return response.json();
+
+    })
+
+    .then(data => {
+
+        if (!data.success) {
+
+            showToast(
+                data.message || 'Unable to delete note',
+                'error'
+            );
+
+            return;
+        }
+
+
+        
+        //Remove comment from page
+        const commentElement =
+            document.getElementById(
+                `customer-comment-${commentId}`
+            );
+
+
+        if (commentElement) {
+            commentElement.remove();
+        }
+
+
+        
+        //Show empty state if no comments remain
+        const container =
+            document.getElementById(
+                'customerCommentsContainer'
+            );
+
+
+        const remainingComments =
+            container.querySelectorAll(
+                '.customer-comment'
+            );
+
+
+        if (remainingComments.length === 0) {
+
+            container.innerHTML = `
+                <p
+                    id="noCustomerComments"
+                    style="font-size:13px;color:var(--text-muted)"
+                >
+                    No notes yet.
+                </p>
+            `;
+
+        }
+
+
+        showToast(
+            data.message || 'Note deleted',
+            'success'
+        );
+
+    })
+
+    .catch(error => {
+
+        console.error(
+            'Error deleting customer comment:',
+            error
+        );
+
+        showToast(
+            'Unable to delete note',
+            'error'
+        );
+
+    });
+
+}
+
+//ESCAPE HTML
+function escapeHtml(value) {
+
+    if (
+        value === null ||
+        value === undefined
+    ) {
+        return '';
+    }
+
+
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+}
+
+//LOAD NOTES
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+
+        loadCustomerComments();
+
+    }
+);
+
+</script>
