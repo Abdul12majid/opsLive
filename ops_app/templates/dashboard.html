@@ -270,9 +270,17 @@
   </div>
 </div>
 
+<script>
+    window.djangoUrls = {
+        dashboard: "{% url 'dashboard' %}",
+        customers: "{% url 'customers' %}",
+        jobs: "{% url 'customers' %}",
+    };
+</script>
+
 <script src="{% static 'js/app.js' %}"></script>
 <script>
-  document.getElementById('sidebar-mount').innerHTML = buildSidebar('base.html');
+  document.getElementById('sidebar-mount').innerHTML = buildSidebar('dashbaord.html');
   document.getElementById('topbar-mount').innerHTML  = buildTopbar('Dashboard', null,
     `<a href="customer_list.html" class="btn btn-primary btn-sm">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>

@@ -29,7 +29,7 @@
         </div>
         <div class="chip-list" style="margin-left:auto">
           <button class="chip active" data-filter="all" onclick="setFilter('all')">All</button>
-          <button class="chip" data-filter="ahs" onclick="setFilter('ahs')">AHS</button>
+          <button class="chip" data-filter="warranty" onclick="setFilter('warranty')">Warranty</button>
           <button class="chip" data-filter="recent" onclick="setFilter('recent')">Recent (7d)</button>
           <button class="chip" data-filter="unpaid" onclick="setFilter('unpaid')">Unpaid</button>
         </div>
@@ -52,7 +52,7 @@
           <div class="stat-sub"><span class="stat-trend up">&#8599; 8%</span> vs last month</div>
         </div>
         <div class="stat-card">
-          <div class="stat-label">AHS Contracts</div>
+          <div class="stat-label">Warranty Contracts</div>
           <div class="stat-value" style="color:var(--purple)">1,204</div>
           <div class="stat-sub">31% of total</div>
         </div>
@@ -196,6 +196,13 @@
   </div>
 </div>
 
+<script>
+    window.djangoUrls = {
+        dashboard: "{% url 'dashboard' %}",
+        customers: "{% url 'customers' %}",
+        jobs: "{% url 'customers' %}",
+    };
+</script>
 <script src="{% static 'js/app.js' %}"></script>
 <script>
   document.getElementById('sidebar-mount').innerHTML =
