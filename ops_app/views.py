@@ -6,6 +6,8 @@ from django.views.decorators.http import require_http_methods
 
 
 # Create your views here.
+def dashboard(request):
+    return render(request, 'dashboard.html')
 
 def list_customers(request):
     customers = Customer.objects.all().order_by("-id")[:15]
@@ -17,7 +19,6 @@ def list_customers(request):
     }
     return render(request, "customer/customer_list.html", context)
 
-
 def customer_details(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
 
@@ -27,7 +28,6 @@ def customer_details(request, pk):
     }
     return render(request, "customer/customer_details.html", context)
 
-
 def job_details(request, pk):
     job = get_object_or_404(Job, pk=pk)
 
@@ -35,7 +35,6 @@ def job_details(request, pk):
     	"job": job,
     }
     return render(request, "job/job_info.html", context)
-
 
 def get_comment_user_info(user):
     if not user:
@@ -63,7 +62,6 @@ def get_comment_user_info(user):
         "name": name,
         "initials": initials,
     }
-
 
 @login_required(login_url='login_user_mobile')
 def customer_comments(request, pk):
@@ -95,7 +93,6 @@ def customer_comments(request, pk):
         'success': True,
         'comments': data,
     })
-
 
 @login_required(login_url='login_user_mobile')
 @require_http_methods(["POST"])
@@ -141,7 +138,6 @@ def add_customer_comment(request, pk):
             ),
         }
     })
-
 
 @login_required(login_url='login_user_mobile')
 @require_http_methods(["POST"])
