@@ -132,6 +132,7 @@ def job_attachment_report_path(instance, filename):
     filename = f"{timestamp}_{customer_name}_{appliance}.pdf"
 
     return f"{report_folder}/{filename}"
+    
 class Job(models.Model):
     STATUS_CHOICES = [
         ('New', 'New'),

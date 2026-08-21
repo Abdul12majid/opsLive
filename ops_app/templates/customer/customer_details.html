@@ -324,6 +324,13 @@
   </div>
 </div>
 
+<script>
+    window.djangoUrls = {
+        dashboard: "{% url 'dashboard' %}",
+        customers: "{% url 'customers' %}",
+        jobs: "{% url 'jobs' %}",
+    };
+</script>
 <script src="{% static 'js/app.js' %}"></script>
 <script>
   document.getElementById('sidebar-mount').innerHTML =

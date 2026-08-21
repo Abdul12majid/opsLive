@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>OpsLive — Customers</title>
+  <title>OpsLive — Jobs</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
   <script>
     (function() {
@@ -42,8 +42,8 @@
       <!-- Stats -->
       <div class="stats-row">
         <div class="stat-card">
-          <div class="stat-label">Total Customers</div>
-          <div class="stat-value">3,868</div>
+          <div class="stat-label">Total Jobs</div>
+          <div class="stat-value">862</div>
           <div class="stat-sub">+20 this week</div>
         </div>
         <div class="stat-card">
@@ -67,7 +67,7 @@
       <div class="card">
         <div class="card-header">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
-          <span class="card-title">Customer List</span>
+          <span class="card-title">Job List</span>
           <span style="font-size:12px;color:var(--text-muted)" id="result-count">20 results</span>
           <button class="btn btn-outline btn-sm">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -79,37 +79,29 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
+                <th>Title</th>
                 <th>Created</th>
-                <th>Jobs</th>
+                <th>Customer</th>
                 <th>Status</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="customers-tbody">
-                {% for c in customers %}
+                {% for c in jobs %}
                 <tr>
                     <td class="td-muted">#{{ c.id }}</td>
 
+                    <td>{{ c.title }}</td>
+
+                    <td class="td-muted">
+                        {{ c.created_at|date:"m/d/y H:i" }}
+                    </td>
+
                     <td>
                         <a href="{% url 'customer_details' c.id %}" class="td-link">
-                            {{ c.full_name }}
+                            {{ c.customer.full_name }}
                         </a>
                     </td>
-
-                    <td>{{ c.formatted_phone }}</td>
-
-                    <td class="td-muted">
-                        {{ c.email|default:"-" }}
-                    </td>
-
-                    <td class="td-muted">
-                        {{ c.date_added|date:"m/d/y H:i" }}
-                    </td>
-
-                    <td>{{ c.jobs.count }}</td>
 
                     <td>
                         {% if c.is_unpaid %}
@@ -122,7 +114,7 @@
                     <td style="text-align:right">
                         <button
                             class="btn btn-ghost btn-sm btn-icon"
-                            onclick="location.href='{% url 'customer_details' c.id %}'">
+                            onclick="location.href='{% url 'job_details' c.id %}'">
 
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -206,10 +198,10 @@
 <script src="{% static 'js/app.js' %}"></script>
 <script>
   document.getElementById('sidebar-mount').innerHTML =
-    buildSidebar('customer_list.html');
+    buildSidebar('job_list.html');
 
   document.getElementById('topbar-mount').innerHTML =
-    buildTopbar('Customers', '/ {{ customer_count }} total');
+    buildTopbar('Jobs', '/ {{ job_count }} total');
 
   function filterCustomers() {
     const query = document

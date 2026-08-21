@@ -19,6 +19,16 @@ def list_customers(request):
     }
     return render(request, "customer/customer_list.html", context)
 
+def list_jobs(request):
+    jobs = Job.objects.all().order_by("-id")[:15]
+    job_count = Job.objects.count()
+
+    context={
+        "jobs":jobs,
+        "job_count":job_count
+    }
+    return render(request, "job/job_list.html", context)
+
 def customer_details(request, pk):
     customer = get_object_or_404(Customer, pk=pk)
 
