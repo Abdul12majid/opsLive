@@ -3,3 +3,5 @@ webhook_triggers/
 seed_customers.py
 seed_jobs.py
 db.sqlite3
+__pycache__/
+*.pyc
